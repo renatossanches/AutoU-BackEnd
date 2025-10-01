@@ -8,5 +8,5 @@ passlib[bcrypt]>=1.7.4,<1.8
 pydantic[email]>=2.11,<2.12
 email-validator>=1.3.1,<2.2
 transformers==4.44.2
-tokenizers==0.19.2
+tokenizers==0.22.1
 tensorflow==2.29.0 
