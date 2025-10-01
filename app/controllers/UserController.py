@@ -10,14 +10,14 @@ from app.utils.Security import create_access_token
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-@router.post("/register", response_model=UserResponse)
+@router.post("/register", response_model=UserResponseDto)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     try:
         return register_user(db, user.email, user.password, user.name)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/login", response_model=LoginResponse)
+@router.post("/login", response_model=LoginResponseDto)
 def login(user: UserLogin, db: Session = Depends(get_db)):
     try:
         return login_user(db, user.email, user.password)
