@@ -8,3 +8,7 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+    model_config = {
+        "from_attributes": True  
+    }

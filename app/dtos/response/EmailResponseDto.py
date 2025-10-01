@@ -9,5 +9,6 @@ class EmailResponseDTO(BaseModel):
     categoria: str
     is_important: bool
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True  
+    }
