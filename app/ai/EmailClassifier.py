@@ -24,3 +24,4 @@ def predict_importance(subject: str, body: str) -> str:
     if label == "LABEL_1":
         return "Produtivo"
     return "Improdutivo"
+''

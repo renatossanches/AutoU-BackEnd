@@ -1,6 +1,6 @@
 import os
 from datasets import load_dataset
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
+from transformers import AutoTokenizer, TFAutoModelForSequenceClassification, Trainer, TrainingArguments
 
 # ===== Configurações =====
 DATA_PATH = "data/emails.csv"             # CSV de treino
@@ -21,10 +21,10 @@ def tokenize(batch):
     return tokenizer(batch["subject"] + " " + batch["body"], padding=True, truncation=True)
 
 dataset = dataset.map(tokenize, batched=True)
-dataset.set_format("torch", columns=["input_ids", "attention_mask", "label"])
+dataset.set_format("tensorflow", columns=["input_ids", "attention_mask", "label"])
 
 # Modelo
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=2)
+model = TFAutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=2, from_pt=True)
 
 # Argumentos de treinamento
 training_args = TrainingArguments(
