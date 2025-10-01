@@ -47,10 +47,12 @@ def list_user_emails(db: Session, user_id: int):
         response.append(EmailResponseDTO(
             id=e.id,
             sender_id=e.sender_id,
+            sender_email=e.sender.email,
             receiver_id=e.receiver_id,
             subject=e.subject,
             body=e.body,
             categoria=e.categoria,
-            is_important=bool(e.is_important)  
+            is_important=bool(e.is_important)
         ))
     return response
+
