@@ -5,5 +5,7 @@ psycopg2-binary
 alembic
 python-jose
 passlib[bcrypt]
-pydantic
+pydantic[email]
 email-validator
+transformers
+torch
