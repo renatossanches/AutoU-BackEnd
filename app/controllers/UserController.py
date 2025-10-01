@@ -4,6 +4,9 @@ from app.database import get_db
 from app.services.UserService import register_user, login_user
 from app.dtos.request.UserRequestDto import UserCreate, UserLogin
 from app.dtos.response.UserResponseDto import UserResponse
+from app.dtos.response.LoginResponseDto import LoginResponse
+from app.utils.Security import hash_password, verify_password
+from app.utils.Security import create_access_token
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -14,7 +17,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/login", response_model=UserResponse)
+@router.post("/login", response_model=LoginResponse)
 def login(user: UserLogin, db: Session = Depends(get_db)):
     try:
         return login_user(db, user.email, user.password)
