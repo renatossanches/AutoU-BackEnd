@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: AutoU-BackEnd
-    env: python
-    plan: free
-    pythonVersion: 3.12.16
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.Main:app --host 0.0.0.0 --port $PORT
