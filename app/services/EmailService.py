@@ -11,8 +11,10 @@ def send_email(db: Session, sender_id: int, email_request: EmailRequestDTO) -> E
     if not receiver:
         raise Exception("Destinatário não encontrado")
 
-    # Classificação com IA
-    is_important = predict_importance(email_request.subject, email_request.body)
+    # Classificação com IA - deve retornar boolean
+    is_important = bool(predict_importance(email_request.subject, email_request.body))
+    
+    # Categoria textual
     categoria = "Produtivo" if is_important else "Improdutivo"
 
     # Criar email no banco
@@ -26,6 +28,7 @@ def send_email(db: Session, sender_id: int, email_request: EmailRequestDTO) -> E
         categoria=categoria
     )
 
+    # Retorno estruturado
     return EmailResponseDTO(
         id=email.id,
         sender_id=email.sender_id,
@@ -35,6 +38,7 @@ def send_email(db: Session, sender_id: int, email_request: EmailRequestDTO) -> E
         categoria=categoria,
         is_important=is_important
     )
+
 
 def list_user_emails(db: Session, user_id: int):
     emails = get_emails_by_user(db, user_id)
@@ -47,6 +51,6 @@ def list_user_emails(db: Session, user_id: int):
             subject=e.subject,
             body=e.body,
             categoria=e.categoria,
-            is_important=e.is_important
+            is_important=bool(e.is_important)  
         ))
     return response
