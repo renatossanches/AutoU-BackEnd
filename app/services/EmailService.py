@@ -4,6 +4,7 @@ from app.repositories.UserRepository import get_user_by_email
 from app.ai.EmailClassifier import predict_importance
 from app.dtos.request.EmailRequestDto import EmailRequestDTO
 from app.dtos.response.EmailResponseDto import EmailResponseDTO
+from app.dtos.response.EmailResponseDtoWithSenderMail import EmailResponseDtoWithSenderMail
 
 def send_email(db: Session, sender_id: int, email_request: EmailRequestDTO) -> EmailResponseDTO:
     # Buscar usuário destinatário
@@ -44,7 +45,7 @@ def list_user_emails(db: Session, user_id: int):
     emails = get_emails_by_user(db, user_id)
     response = []
     for e in emails:
-        response.append(EmailResponseDTO(
+        response.append(EmailResponseDtoWithSenderMail(
             id=e.id,
             sender_id=e.sender_id,
             sender_email=e.sender.email,
