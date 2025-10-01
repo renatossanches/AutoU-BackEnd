@@ -13,7 +13,7 @@ def send_email(db: Session, sender_id: int, email_request: EmailRequestDTO) -> E
         raise Exception("Destinatário não encontrado")
 
     # Classificação com IA - deve retornar boolean
-    is_important = bool(predict_importance(email_request.subject, email_request.body))
+    is_important = predict_importance(email_request.subject, email_request.body) == "Produtivo"
     
     # Categoria textual
     categoria = "Produtivo" if is_important else "Improdutivo"

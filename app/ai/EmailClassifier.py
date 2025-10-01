@@ -1,16 +1,21 @@
-import os
 import joblib
+import os
 
-# Caminho do modelo treinado
+# Carrega modelo treinado
 MODEL_PATH = "app/ai/EmailClassifier/email_classifier.pkl"
-
-# Carrega modelo
 classifier = joblib.load(MODEL_PATH)
 
+PROMO_KEYWORDS = [
+    "oferta", "imperdível", "desconto", "promoção", "frete grátis",
+    "compre já", "liquidação", "ganhe", "promo"
+]
+
 def predict_importance(subject: str, body: str) -> str:
-    """
-    Retorna a categoria do email: 'Produtivo' ou 'Improdutivo'
-    """
-    text = subject + " " + body
+    text = f"{subject} {body}".lower()
+
+    # Se tiver palavras-chave de promoção, considera improdutivo
+    if any(kw in text for kw in PROMO_KEYWORDS):
+        return "Improdutivo"
+
     pred = classifier.predict([text])[0]
     return "Produtivo" if pred == 1 else "Improdutivo"
