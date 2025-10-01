@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.services.UserService import register_user, login_user
 from app.dtos.request.UserRequestDto import UserCreate, UserLogin
-from app.dtos.response.UserResponseDto import UserResponse
-from app.dtos.response.LoginResponseDto import LoginResponse
+from app.dtos.response.UserResponseDto import UserResponseDto
+from app.dtos.response.LoginResponseDto import LoginResponseDto
 from app.utils.Security import hash_password, verify_password
 from app.utils.Security import create_access_token
 

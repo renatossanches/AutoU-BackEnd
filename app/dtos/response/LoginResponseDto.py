@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class LoginResponse(BaseModel):
+class LoginResponseDto(BaseModel):
     id: int
     email: str
     name: str
