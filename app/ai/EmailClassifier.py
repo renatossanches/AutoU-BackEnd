@@ -4,11 +4,12 @@ import os
 # Caminho do modelo treinado
 MODEL_PATH = "app/ai/EmailClassifier"
 
-# Inicializa pipeline de classificação
+# Inicializa pipeline de classificação usando TensorFlow como backend
 classifier = pipeline(
     "text-classification",
     model=MODEL_PATH,
-    tokenizer=MODEL_PATH
+    tokenizer=MODEL_PATH,
+    framework="tf"  # força o uso de TensorFlow em vez de PyTorch
 )
 
 def predict_importance(subject: str, body: str) -> str:
