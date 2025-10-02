@@ -5,16 +5,18 @@ from app.services.EmailService import send_email, list_user_emails
 from app.dtos.request.EmailRequestDto import EmailRequestDTO
 from app.dtos.response.EmailResponseDto import EmailResponseDTO
 from app.dtos.response.EmailResponseDtoWithSenderMail import EmailResponseDtoWithSenderMail
+from app.utils.Security import get_current_user
+
 router = APIRouter(prefix="/emails", tags=["emails"])
 
 @router.post("/send", response_model=EmailResponseDTO)
-def send(email_request: EmailRequestDTO, db: Session = Depends(get_db), sender_id: int = 1):
-    """
-    Envia um email e classifica usando IA.
-    sender_id por enquanto é fixo, futuramente pode vir do JWT.
-    """
+def send(
+    email_request: EmailRequestDTO,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
     try:
-        return send_email(db, sender_id, email_request)
+        return send_email(db, sender_id=current_user.id, email_request=email_request)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
