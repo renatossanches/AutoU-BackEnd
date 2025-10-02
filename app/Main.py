@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.controllers import UserController, EmailController
+from app.controllers import UserController, EmailController, AutoCompleteController
 from app.database import init_db
 
 app = FastAPI(title="AutoU Backend")
@@ -20,3 +20,4 @@ init_db()
 # ===== Rotas =====
 app.include_router(UserController.router)
 app.include_router(EmailController.router)
+app.include_router(AutoCompleteController.router)
