@@ -1,6 +1,11 @@
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import jwt
+from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.repositories.UserRepository import get_user_by_id
 
 # ===== Configurações =====
 SECRET_KEY = "SEU_SEGREDO_AQUI" 
@@ -9,6 +14,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 # ===== Contexto para bcrypt =====
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # ===== Funções de Senha =====
 def hash_password(password: str) -> str:
@@ -30,3 +37,10 @@ def create_access_token(data: dict, expires_delta: int = ACCESS_TOKEN_EXPIRE_MIN
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    user_id = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])["sub"]
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=401, detail="Usuário não autenticado")
+    return user

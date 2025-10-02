@@ -11,7 +11,7 @@ from fastapi import Depends
 def send_email(
     db: Session,
     email_request: EmailRequestDTO,
-    current_user: User = Depends(get_current_user)  # obtém o usuário logado automaticamente
+    current_user: User = Depends(get_current_user) 
 ) -> EmailResponseDTO:
     # Usuário logado será o remetente
     sender_id = current_user.id
