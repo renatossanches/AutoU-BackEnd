@@ -8,29 +8,22 @@ from app.dtos.response.EmailResponseDtoWithSenderMail import EmailResponseDtoWit
 from app.utils.Security import get_current_user
 from app.models.User import User
 from fastapi import Depends
-def send_email(
-    db: Session,
-    email_request: EmailRequestDTO,
-    current_user: User = Depends(get_current_user) 
-) -> EmailResponseDTO:
-    # Usuário logado será o remetente
-    sender_id = current_user.id
-
-    # Buscar usuário destinatário pelo email
+def send_email(db: Session, email_request: EmailRequestDTO, current_user = Depends(get_current_user)) -> EmailResponseDTO:
+    # ===== Buscar usuário destinatário =====
     receiver = get_user_by_email(db, email_request.receiver_email)
     if not receiver:
         raise Exception("Destinatário não encontrado")
 
-    # Classificação com IA - deve retornar boolean
+    # ===== Classificação com IA =====
     is_important = predict_importance(email_request.subject, email_request.body) == "Produtivo"
-
-    # Categoria textual do email
+    
+    # ===== Categoria textual =====
     categoria = "Produtivo" if is_important else "Improdutivo"
 
-    # Criar email no banco
+    # ===== Criar email no banco =====
     email = create_email(
         db=db,
-        sender_id=sender_id,
+        sender_id=current_user.id,
         receiver_id=receiver.id,
         subject=email_request.subject,
         body=email_request.body,
@@ -38,7 +31,7 @@ def send_email(
         categoria=categoria
     )
 
-    # Retorno estruturado para o frontend
+    # ===== Retorno estruturado =====
     return EmailResponseDTO(
         id=email.id,
         sender_id=email.sender_id,

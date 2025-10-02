@@ -10,15 +10,9 @@ from app.utils.Security import get_current_user
 router = APIRouter(prefix="/emails", tags=["emails"])
 
 @router.post("/send", response_model=EmailResponseDTO)
-def send(
-    email_request: EmailRequestDTO,
-    db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
-):
-    try:
-        return send_email(db, sender_id=current_user.id, email_request=email_request)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+def send_email_endpoint(email_request: EmailRequestDTO, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+    return send_email(db, email_request, current_user)
+
 
 @router.get("/user/{user_id}", response_model=list[EmailResponseDtoWithSenderMail])
 def list_emails(user_id: int, db: Session = Depends(get_db)):
