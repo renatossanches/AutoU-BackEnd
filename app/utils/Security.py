@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from jose import jwt
 
 # ===== Configurações =====
-SECRET_KEY = "SEU_SEGREDO_AQUI"  # futuramente, use variáveis de ambiente
+SECRET_KEY = "SEU_SEGREDO_AQUI" 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 

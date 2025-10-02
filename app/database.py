@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import OperationalError
 
 # ===== Variáveis de ambiente =====
-DATABASE_URL = os.environ.get("DATABASE_URL")  # Definida no Railway
+DATABASE_URL = os.environ.get("DATABASE_URL")  # Definição no Railway
 
 # ===== Configuração SQLAlchemy =====
 engine = create_engine(
