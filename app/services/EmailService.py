@@ -50,6 +50,7 @@ def list_user_emails(db: Session, user_id: int):
             sender_id=e.sender_id,
             sender_email=e.sender.email,
             receiver_id=e.receiver_id,
+            receiver_email=e.receiver.email,
             subject=e.subject,
             body=e.body,
             categoria=e.categoria,
