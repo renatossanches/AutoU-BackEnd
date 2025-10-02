@@ -5,17 +5,26 @@ from app.ai.EmailClassifier import predict_importance
 from app.dtos.request.EmailRequestDto import EmailRequestDTO
 from app.dtos.response.EmailResponseDto import EmailResponseDTO
 from app.dtos.response.EmailResponseDtoWithSenderMail import EmailResponseDtoWithSenderMail
+from app.utils.Security import get_current_user
+from app.models.User import User
+from fastapi import Depends
+def send_email(
+    db: Session,
+    email_request: EmailRequestDTO,
+    current_user: User = Depends(get_current_user)  # obtém o usuário logado automaticamente
+) -> EmailResponseDTO:
+    # Usuário logado será o remetente
+    sender_id = current_user.id
 
-def send_email(db: Session, sender_id: int, email_request: EmailRequestDTO) -> EmailResponseDTO:
-    # Buscar usuário destinatário
+    # Buscar usuário destinatário pelo email
     receiver = get_user_by_email(db, email_request.receiver_email)
     if not receiver:
         raise Exception("Destinatário não encontrado")
 
     # Classificação com IA - deve retornar boolean
     is_important = predict_importance(email_request.subject, email_request.body) == "Produtivo"
-    
-    # Categoria textual
+
+    # Categoria textual do email
     categoria = "Produtivo" if is_important else "Improdutivo"
 
     # Criar email no banco
@@ -29,7 +38,7 @@ def send_email(db: Session, sender_id: int, email_request: EmailRequestDTO) -> E
         categoria=categoria
     )
 
-    # Retorno estruturado
+    # Retorno estruturado para o frontend
     return EmailResponseDTO(
         id=email.id,
         sender_id=email.sender_id,
