@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.repositories.UserRepository import get_user_by_id
+from app.repositories.UserRepository import get_user_by_email
 
 # ===== Configurações =====
 SECRET_KEY = "SEU_SEGREDO_AQUI" 
@@ -37,10 +37,13 @@ def create_access_token(data: dict, expires_delta: int = ACCESS_TOKEN_EXPIRE_MIN
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
 def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    user_id = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])["sub"]
-    user = get_user_by_id(db, user_id)
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    email = payload.get("sub")
+    if email is None:
+        raise HTTPException(status_code=401, detail="Token inválido")
+
+    user = get_user_by_email(db, email)
     if not user:
         raise HTTPException(status_code=401, detail="Usuário não autenticado")
     return user
